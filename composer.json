@@ -1,0 +1,12 @@
+{
+	"name": "prolib/efficiency",
+	"type": "library",
+	"autoload": {
+		"psr-4": {
+			"ProLib\\Efficiency": ["src/"]
+		}
+	},
+	"require": {
+		"php": ">= 7.1"
+	}
+}
