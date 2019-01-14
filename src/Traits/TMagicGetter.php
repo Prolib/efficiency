@@ -4,7 +4,7 @@ namespace ProLib\Efficiency\Traits;
 
 use Nette\Utils\ObjectHelpers;
 
-trait MagicGetter {
+trait TMagicGetter {
 
 	public function __get($name) {
 		$getter = 'get' . ucfirst($name);
