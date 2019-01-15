@@ -8,9 +8,7 @@ trait TDefaultAction {
 
 	abstract protected function _getDefaultActionParams(): DefaultActionParams;
 
-	protected function _defaultCallback() {
-		$params = $this->_getDefaultActionParams();
-
+	protected function _defaultCallback(DefaultActionParams $params) {
 		$template = $this->getTemplate();
 		$template->components = $params->getComponents();
 
@@ -18,7 +16,7 @@ trait TDefaultAction {
 	}
 	
 	public function actionDefault() {
-		$this->_defaultCallback();
+		$this->_defaultCallback($this->_getDefaultActionParams());
 	}
 
 }
