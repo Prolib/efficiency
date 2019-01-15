@@ -1,0 +1,7 @@
+{block content}
+	{foreach $components as $name => $title}
+		{embed panel title => $title}
+			{control $name}
+		{/embed}
+	{/foreach}
+{/block}

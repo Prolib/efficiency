@@ -3,7 +3,7 @@
 namespace ProLib\Efficiency\Traits;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Thunbolt\Administration\DataObjects\EditActionParams;
+use ProLib\Efficiency\DataObjects\EditActionParams;
 
 trait TEditAction {
 

@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Thunbolt\Administration\DataObjects;
+namespace ProLib\Efficiency\DataObjects;
 
 final class EditActionParams {
 
