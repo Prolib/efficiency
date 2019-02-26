@@ -4,7 +4,7 @@ namespace ProLib\Efficiency\Doctrine;
 
 use Nette\SmartObject;
 use Doctrine\ORM\EntityManagerInterface;
-use WebChemistry\DoctrineHydration\IHydration;
+use Nettrine\Hydrator\IHydrator;
 
 class UnitOfWork {
 
@@ -13,7 +13,7 @@ class UnitOfWork {
 	/** @var EntityManagerInterface */
 	private $em;
 
-	/** @var IHydration */
+	/** @var IHydrator */
 	private $hydration;
 
 	public function __construct(EntityManagerInterface $em, IHydration $hydration) {
