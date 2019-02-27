@@ -7,24 +7,32 @@ use ProLib\Efficiency\Exceptions\EntityNotFoundException;
 trait TGetEntityPresenter {
 
 	/** @var object[] */
-	private $entityCache = [];
+	private $_entityCache = [];
 
 	/**
 	 * @param string $class
-	 * @return null|object|mixed
+	 * @return object
 	 * @throws EntityNotFoundException
 	 */
-	protected function getEntityById(string $class) {
-		if (!isset($this->entityCache[$class])) {
+	protected function getEntityById(string $class): object {
+		if (!($entity = $this->getEntityByIdSafe($class))) {
+			throw new EntityNotFoundException($class, $this->getParameter('id'));
+		}
+
+		return $entity;
+	}
+
+	protected function getEntityByIdSafe(string $class): ?object {
+		if (!array_key_exists($class, $this->_entityCache)) {
 			$id = $this->getParameter('id');
-			if ($id && $row = $this->em->getRepository($class)->find((int) $id)) {
-				$this->entityCache[$class] = $row;
+			if ($id) {
+				$this->_entityCache[$class] = $this->em->getRepository($class)->find((int) $id);
 			} else {
-				throw new EntityNotFoundException($class, $id);
+				$this->_entityCache[$class] = null;
 			}
 		}
 
-		return $this->entityCache[$class];
+		return $this->_entityCache[$class];
 	}
 
 }
