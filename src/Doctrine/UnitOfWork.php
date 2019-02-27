@@ -14,23 +14,23 @@ class UnitOfWork {
 	private $em;
 
 	/** @var IHydrator */
-	private $hydration;
+	private $hydrator;
 
-	public function __construct(EntityManagerInterface $em, IHydration $hydration) {
+	public function __construct(EntityManagerInterface $em, IHydrator $hydrator) {
 		$this->em = $em;
-		$this->hydration = $hydration;
+		$this->hydrator = $hydrator;
 	}
 
 	public function toArray($object, array $settings = []) {
-		return $this->hydration->toArray($object, $settings);
+		return $this->hydrator->toArray($object, $settings);
 	}
 
 	public function toFields($object, iterable $values, array $settings = []) {
-		return $this->hydration->toFields($object, $values, $settings);
+		return $this->hydrator->toFields($object, $values, $settings);
 	}
 
 	public function prepare(string $class, $object, array $values, array $settings = []) {
-		$entity = $this->hydration->toFields($object === null ? $class : $object, $values, $settings);
+		$entity = $this->hydrator->toFields($object === null ? $class : $object, $values, $settings);
 
 		if (!$object) {
 			$this->em->persist($entity);
