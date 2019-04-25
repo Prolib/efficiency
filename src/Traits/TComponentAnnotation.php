@@ -5,54 +5,38 @@ namespace ProLib\Efficiency\Traits;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
+use ProLib\Efficiency\Exceptions\ComponentCreationException;
+use ProLib\Efficiency\Helpers\EfficiencyHelper;
 
 trait TComponentAnnotation {
 
-	protected function createComponent(string $name): ?IComponent {
-		if ($component = parent::createComponent($name)) {
-			return $component;
-		}
+	private function componentAnnotation(string $name): ?IComponent {
 		if (property_exists($this, $name)) {
 			$reflection = new \ReflectionProperty($this, $name);
-			$comment = $reflection->getDocComment();
-			if (preg_match('#@component(\((.*?)\))?#', $comment, $matches)) {
+			$options = EfficiencyHelper::loadAnnotationOptions('component', $reflection);
+			if ($options !== null) {
 				$component = $this->$name;
-				// options
-				if (isset($matches[2])) {
-					$options = Json::decode('{' . $matches[2] . '}', JSON_OBJECT_AS_ARRAY);
-
-					$component = $this->adjustComponent($component, $options);
+				if ($ret = EfficiencyHelper::factoryMethod($options, $component, $reflection)) {
+					$component = $ret;
 				}
 
-				return $component;
+				return $this->_adjustComponent($component, $options);
 			}
 		}
 
 		return null;
 	}
 
-	protected function adjustComponent($component, array $options): IComponent {
+	private function _adjustComponent($component, array $options): IComponent {
 		// method
+		// deprecated way
 		if (isset($options['method'])) {
-			$component = $component->{$options['method']}();
+			$options['factory'] = $options['method'];
 		}
-		// form
-		if (isset($options['form'])) {
-			$component->onSuccess[] = function () use ($options): void {
-				if (isset($options['flashMessage'])) {
-					$this->flashMessage($options['flashMessage']);
-				}
 
-				$this->redirectRestore(is_string($options['form']) ? $options['form'] : 'this');
-			};
-		}
-		// flashError
-		if (isset($options['flashError']) && $component instanceof Form) {
-			$component->onError[] = function (Form $form): void {
-				foreach ($form->getErrors() as $error) {
-					$this->flashMessage($error, 'error');
-				}
-			};
+		if (isset($options['factory'])) {
+			$component = $component->{$options['factory']}();
 		}
 
 		return $component;
