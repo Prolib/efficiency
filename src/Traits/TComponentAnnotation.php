@@ -2,11 +2,7 @@
 
 namespace ProLib\Efficiency\Traits;
 
-use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
-use ProLib\Efficiency\Exceptions\ComponentCreationException;
 use ProLib\Efficiency\Helpers\EfficiencyHelper;
 
 trait TComponentAnnotation {
@@ -21,25 +17,11 @@ trait TComponentAnnotation {
 					$component = $ret;
 				}
 
-				return $this->_adjustComponent($component, $options);
+				return $component;
 			}
 		}
 
 		return null;
-	}
-
-	private function _adjustComponent($component, array $options): IComponent {
-		// method
-		// deprecated way
-		if (isset($options['method'])) {
-			$options['factory'] = $options['method'];
-		}
-
-		if (isset($options['factory'])) {
-			$component = $component->{$options['factory']}();
-		}
-
-		return $component;
 	}
 
 }
