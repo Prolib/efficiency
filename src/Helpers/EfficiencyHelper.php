@@ -42,7 +42,6 @@ final class EfficiencyHelper {
 					sprintf('method %s not exists', $options['factory']), $reflector
 				);
 			}
-			unset($options['factory']);
 
 			return $component->{$options['factory']}();
 		}
