@@ -7,6 +7,7 @@ use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use ProLib\Efficiency\Exceptions\ComponentCreationException;
 use ProLib\Efficiency\Helpers\EfficiencyHelper;
+use Throwable;
 
 /**
  * Options:
@@ -22,24 +23,32 @@ trait TFormAnnotation {
 		if (property_exists($this, $name)) {
 			$reflection = new \ReflectionProperty($this, $name);
 
-			$options = EfficiencyHelper::loadAnnotationOptions('form', $reflection);
-			if ($options) {
-				$component = $this->$name;
-				EfficiencyHelper::checkObject($component, $reflection);
+			try {
+				$options = EfficiencyHelper::loadAnnotationOptions('form', $reflection);
+				if ($options) {
+					$component = $this->$name;
+					EfficiencyHelper::checkObject($component, $reflection);
 
-				if ($ret = EfficiencyHelper::factoryMethod($options, $component, $reflection)) {
-					$component = $ret;
+					if ($ret = EfficiencyHelper::factoryMethod($options, $component, $reflection)) {
+						$component = $ret;
+					}
+
+					if (!$component instanceof Form) {
+						throw ComponentCreationException::createInvalidProperty(
+							sprintf('must be instance of %s, %s given', Form::class, get_class($component)), $reflection
+						);
+					}
+
+					$this->_adjustForm($component, $options);
+
+					return $component;
 				}
-
-				if (!$component instanceof Form) {
-					throw ComponentCreationException::createInvalidProperty(
-						sprintf('must be instance of %s, %s given', Form::class, get_class($component)), $reflection
-					);
+			} catch (Throwable $e) {
+				if ($e instanceof ComponentCreationException) {
+					throw $e;
+				} else {
+					throw ComponentCreationException::createInvalidProperty($e->getMessage(), $reflection, $e);
 				}
-
-				$this->_adjustForm($component, $options);
-
-				return $component;
 			}
 		}
 
