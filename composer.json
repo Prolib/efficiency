@@ -12,6 +12,7 @@
 	},
 	"require-dev": {
 		"nette/forms": "^3.0",
-		"nette/application": "^3.0"
+		"nette/application": "^3.0",
+		"doctrine/orm": "^2.6"
 	}
 }
