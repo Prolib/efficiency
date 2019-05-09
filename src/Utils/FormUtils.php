@@ -107,9 +107,9 @@ class FormUtils {
 	/**
 	 * @internal
 	 */
-	public function __onError(Form $form, array $values): void {
+	public function __onError(Form $form): void {
 		foreach ($this->onError as $error) {
-			$error($values);
+			$error($form);
 		}
 	}
 
