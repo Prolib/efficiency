@@ -2,9 +2,9 @@
 
 namespace ProLib\Efficiency\Exceptions;
 
-use Throwable;
+use Nette\Application\BadRequestException;
 
-class EntityNotFoundException extends \RuntimeException {
+class EntityNotFoundException extends BadRequestException {
 
 	public function __construct(string $class, $id) {
 		parent::__construct("Entity $class($id) not found.");
