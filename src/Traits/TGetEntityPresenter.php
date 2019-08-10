@@ -2,12 +2,20 @@
 
 namespace ProLib\Efficiency\Traits;
 
+use Doctrine\ORM\EntityManagerInterface;
 use ProLib\Efficiency\Exceptions\EntityNotFoundException;
 
 trait TGetEntityPresenter {
 
 	/** @var object[] */
 	private $_entityCache = [];
+
+	/** @var EntityManagerInterface */
+	private $_em;
+
+	public function inject_EntityManager(EntityManagerInterface $em) {
+		$this->_em = $em;
+	}
 
 	/**
 	 * @param string $class
@@ -26,7 +34,7 @@ trait TGetEntityPresenter {
 		if (!array_key_exists($class, $this->_entityCache)) {
 			$id = $this->getParameter('id');
 			if ($id) {
-				$this->_entityCache[$class] = $this->em->getRepository($class)->find((int) $id);
+				$this->_entityCache[$class] = $this->_em->getRepository($class)->find((int) $id);
 			} else {
 				$this->_entityCache[$class] = null;
 			}

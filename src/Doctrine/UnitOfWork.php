@@ -22,6 +22,10 @@ class UnitOfWork {
 	}
 
 	public function toArray($object, array $settings = []) {
+		if ($object === null) {
+			return [];
+		}
+		
 		return $this->hydrator->toArray($object, $settings);
 	}
 

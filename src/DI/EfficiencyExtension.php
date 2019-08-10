@@ -4,6 +4,7 @@ namespace ProLib\Efficiency\DI;
 
 use Nette\DI\CompilerExtension;
 use ProLib\Efficiency\Doctrine\UnitOfWork;
+use ProLib\Efficiency\Utils\IAdminPresenterUtilsFactory;
 
 final class EfficiencyExtension extends CompilerExtension {
 
@@ -12,6 +13,9 @@ final class EfficiencyExtension extends CompilerExtension {
 
 		$builder->addDefinition($this->prefix('unitOfWork'))
 			->setType(UnitOfWork::class);
+
+		$builder->addFactoryDefinition($this->prefix('adminPresenterUtilsFactory'))
+			->setImplement(IAdminPresenterUtilsFactory::class);
 	}
 
 }
