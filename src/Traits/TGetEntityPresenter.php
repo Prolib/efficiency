@@ -23,14 +23,14 @@ trait TGetEntityPresenter {
 	 * @throws EntityNotFoundException
 	 */
 	protected function getEntityById(string $class): object {
-		if (!($entity = $this->getEntityByIdSafe($class))) {
+		if (!($entity = $this->getNullableEntityById($class))) {
 			throw new EntityNotFoundException($class, $this->getParameter('id'));
 		}
 
 		return $entity;
 	}
 
-	protected function getEntityByIdSafe(string $class): ?object {
+	protected function getNullableEntityById(string $class): ?object {
 		if (!array_key_exists($class, $this->_entityCache)) {
 			$id = $this->getParameter('id');
 			if ($id) {
