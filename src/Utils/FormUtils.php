@@ -56,7 +56,7 @@ class FormUtils {
 			/** @var BaseControl $control */
 			foreach ($this->form->getControls() as $control) {
 				foreach ($control->getErrors() as $error) {
-					$this->control->flashMessage($control->caption . ': ' . $error);
+					$this->control->flashMessage($control->caption . ': ' . $error, 'error');
 				}
 			}
 		};
