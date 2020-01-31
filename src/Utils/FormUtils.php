@@ -38,6 +38,10 @@ class FormUtils {
 		$this->control = $control;
 	}
 
+	public static function create(Form $form, Control $control): self {
+		return new self($form, $control);
+	}
+
 	public function flashMessage(string $message) {
 		$this->onSuccess[] = function () use ($message) {
 			$this->control->flashMessage($message);
@@ -107,9 +111,9 @@ class FormUtils {
 	/**
 	 * @internal
 	 */
-	public function __onError(Form $form, array $values): void {
+	public function __onError(Form $form): void {
 		foreach ($this->onError as $error) {
-			$error($values);
+			$error($form);
 		}
 	}
 
