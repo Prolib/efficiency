@@ -5,6 +5,7 @@ namespace ProLib\Efficiency\Utils;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\Link;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
@@ -32,8 +33,11 @@ class FormUtils {
 	private $uses = [];
 
 	public function __construct(Form $form, Control $control) {
-		$form->onSuccess[] = [$this, '__onSuccess'];
-		$form->onError[] = [$this, '__onError'];
+		$form->onAnchor[] = function () use ($form) {
+			$form->onSuccess[] = [$this, '__onSuccess'];
+			$form->onError[] = [$this, '__onError'];
+		};
+
 		$this->form = $form;
 		$this->control = $control;
 	}
@@ -76,8 +80,32 @@ class FormUtils {
 			$control = $this->getPresenter();
 		}
 
-		$this->form->onSuccess[] = function () use ($destination, $args, $control) {
+		$this->onSuccess[] = function () use ($destination, $args, $control) {
 			$control->redirect($destination, $args);
+		};
+
+		return $this;
+	}
+
+	public function redirectWithBacklink(string $parameterName = 'backlink') {
+		$this->checkUse(__METHOD__);
+
+		$backlink = $this->control->getParameter($parameterName);
+
+		if (!$backlink) {
+			return $this;
+		}
+
+		$this->form->onAnchor[] = function () use ($backlink): void {
+			$link = $this->form->getAction();
+
+			if ($link instanceof Link) {
+				$link->setParameter('backlink', $backlink);
+			}
+		};
+
+		$this->onSuccess[] = function () use ($backlink) {
+			$this->control->getPresenter()->redirectUrl($backlink);
 		};
 
 		return $this;
