@@ -1,7 +1,10 @@
 {block content}
+	{var $panel = WebChemistry\Administration\Latte\AdminBlocks::getPanel()}
+
 	{foreach $components as $name => $title}
-		{embed panel title => $title}
-			{control $name}
+		{embed $panel}
+			{block title}{$title}{/block}
+			{block content}{control $name}{/block}
 		{/embed}
 	{/foreach}
 {/block}

@@ -25,7 +25,7 @@ class UnitOfWork {
 		if ($object === null) {
 			return [];
 		}
-		
+
 		return $this->hydrator->toArray($object, $settings);
 	}
 

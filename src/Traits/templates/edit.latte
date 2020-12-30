@@ -1,5 +1,8 @@
 {block content}
-	{embed panel title => 'Upravit ' . $name}
-		{control $controlName}
+	{var $panel = WebChemistry\Administration\Latte\AdminBlocks::getPanel()}
+
+	{embed $panel}
+		{block title}Upravit {$name}{/block}
+		{block content}{control $controlName}{/block}
 	{/embed}
 {/block}

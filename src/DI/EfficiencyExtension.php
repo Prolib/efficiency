@@ -11,8 +11,10 @@ final class EfficiencyExtension extends CompilerExtension {
 	public function loadConfiguration() {
 		$builder = $this->getContainerBuilder();
 
-		$builder->addDefinition($this->prefix('unitOfWork'))
-			->setType(UnitOfWork::class);
+		if (class_exists(\Nettrine\Hydrator\IHydrator::class)) {
+			$builder->addDefinition($this->prefix('unitOfWork'))
+				->setType(UnitOfWork::class);
+		}
 
 		$builder->addFactoryDefinition($this->prefix('adminPresenterUtilsFactory'))
 			->setImplement(IAdminPresenterUtilsFactory::class);

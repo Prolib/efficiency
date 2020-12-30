@@ -7,14 +7,13 @@ use ProLib\Efficiency\DataObjects\EditActionParams;
 
 trait TEditAction {
 
-	/** @var EntityManagerInterface @inject */
-	public $em;
+	private EntityManagerInterface $_em;
 
 	abstract protected function _getEditActionParams(): EditActionParams;
 
 	protected function _editCallback(int $id): void {
 		$params = $this->_getEditActionParams();
-		if (!($row = $this->em->getRepository($params->getClass())->find($id))) {
+		if (!($row = $this->_em->getRepository($params->getClass())->find($id))) {
 			$this->error();
 		}
 
@@ -44,6 +43,10 @@ trait TEditAction {
 
 	public function actionEdit(int $id): void {
 		$this->_editCallback($id);
+	}
+
+	final public function injectTEditAction(EntityManagerInterface $em): void {
+		$this->_em = $em;
 	}
 
 }
